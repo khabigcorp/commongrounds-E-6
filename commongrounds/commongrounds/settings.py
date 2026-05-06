@@ -47,6 +47,12 @@ INSTALLED_APPS = [
     "commissions",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://commongrounds-e-6-production.up.railway.app/'
+]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
