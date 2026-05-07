@@ -62,21 +62,21 @@ class EventDetailView(DetailView):
         event = self.get_object()
         user = request.user
         if not user.is_authenticated:
-            return redirect("event_signup", pk=event.pk)
+            return redirect("local_events:event_signup", pk=event.pk)
         profile = user.profile
 
         if event.organizers.filter(id=profile.id).exists():
-            return redirect("event_detail", pk=event.pk)
+            return redirect("local_events:event_detail", pk=event.pk)
         if EventSignup.objects.filter(event=event, user_registrant=profile).exists():
-            return redirect("event_detail", pk=event.pk)
+            return redirect("local_events:event_detail", pk=event.pk)
         if event.signups.count() >= event.event_capacity:
-            return redirect("event_detail", pk=event.pk)
+            return redirect("local_events:event_detail", pk=event.pk)
         
         EventSignup.objects.create(event=event, user_registrant=profile)
         if event.signups.count() >= event.event_capacity:
             event.status = Event.STATUS_FULL
             event.save()
-        return redirect("event_detail", pk=event.pk)
+        return redirect("local_events:event_detail", pk=event.pk)
 
 
 class EventCreateView(LoginRequiredMixin, RoleRequiredMixin, CreateView):
