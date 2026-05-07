@@ -111,7 +111,7 @@
                     {% if request.user.is_authenticated %}
                     <div class="mt-4 p-3 bg-white border rounded">
                         <h6>Leave a Review</h6>
-                        <form action="{% url 'diyprojects:add_review' project.pk %}" method="post">
+                        <form action="{% url 'diyprojects:add_review' project.pk %}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             {{ review_form.as_p }}
                             <button type="submit" class="btn btn-primary btn-sm w-100">Submit Review</button>
