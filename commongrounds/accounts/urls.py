@@ -6,6 +6,6 @@ from .views import AccountUpdateView, RegisterView, DashboardView
 urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('register/', RegisterView.as_view(), name='register'),
+        path('dashboard', DashboardView.as_view(), name='dashboard'),
     path('<str:username>/', AccountUpdateView.as_view(), name='accounts_update'),
-    path('<str:username>/dashboard', DashboardView.as_view(), name='dashboard'),
 ]
