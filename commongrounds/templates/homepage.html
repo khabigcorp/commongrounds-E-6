@@ -11,6 +11,8 @@
     <li><a href="{% url 'merchstore:item_list'%}">Merchstore</a></li>
 </ul>
 
+{% if request.user.is_authenticated %}
 <p> Other account functions </p>
 <a href="{% url 'accounts_update' request.user.username %}">Change display name</a>
+{% endif %}
 {% endblock %}
