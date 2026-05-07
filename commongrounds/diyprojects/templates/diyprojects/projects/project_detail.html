@@ -9,6 +9,7 @@
             <p class="text-muted">By {{ project.creator.user.username }} | {{ project.created_at|date:"M d, Y" }}</p>
         </div>
 
+        {% if request.user.is_authenticated %}
         <div class="favorite-section">
             <form action="{% url 'diyprojects:toggle_favorite' project.pk %}" method="post">
                 {% csrf_token %}
@@ -22,6 +23,7 @@
             </form>
             <small class="text-muted d-block text-center mt-1">{{ favorite_count }} saves</small>
         </div>
+        {% endif %}
     </div>
 
 <p>
@@ -62,6 +64,7 @@
             </div>
 
             <!-- NEW RATING FORM SECTION -->
+            {% if request.user.is_authenticated %}
             <div class="card shadow-sm mb-4 border-warning">
                 <div class="card-body">
                     <h6>Rate this Project</h6>
@@ -78,6 +81,7 @@
                     </form>
                 </div>
             </div>
+            {% endif %}
 
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -85,7 +89,15 @@
                     <div class="review-list" style="max-height: 400px; overflow-y: auto;">
                         {% for review in project.reviews.all %}
                             <div class="mb-3 p-2 border-bottom">
-                                <p class="mb-0"><strong>{{ review.reviewer.user.username }}</strong></p>
+                                <p class="mb-0">
+                                    <strong>    
+                                        {% if review.reviewer %}
+                                            {{ review.reviewer.display_name }}
+                                        {% else %}
+                                            Anonymous
+                                        {% endif %}
+                                    </strong>
+                                </p>
                                 <p class="mb-0 small text-muted">{{ review.created_at|date:"M d, Y" }}</p>
                                 <p class="mt-1">{{ review.comment }}</p>
                             </div>
@@ -93,7 +105,7 @@
                             <p class="text-muted italic">No reviews yet.</p>
                         {% endfor %}
                     </div>
-
+                    {% if request.user.is_authenticated %}
                     <div class="mt-4 p-3 bg-white border rounded">
                         <h6>Leave a Review</h6>
                         <form action="{% url 'diyprojects:add_review' project.pk %}" method="post">
@@ -102,6 +114,7 @@
                             <button type="submit" class="btn btn-primary btn-sm w-100">Submit Review</button>
                         </form>
                     </div>
+                    {% endif %}
                 </div>
             </div>
             <br>

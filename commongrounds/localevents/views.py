@@ -19,7 +19,8 @@ class EventListView(ListView):
         signed_up = Event.objects.none()
         other = Event.objects.all()
 
-        if user.is_authenticated:
+        is_organizer = False
+        if user.is_authenticated and hasattr(user, "profile"):
             user_profile = user.profile
             created = Event.objects.filter(organizers=user_profile)
             signed_up = Event.objects.filter(
@@ -31,10 +32,13 @@ class EventListView(ListView):
             is_organizer = user_profile.roles.filter(
                 name="Event Organizer"
             ).exists()
-
-        ctx["created_events"] = created
-        ctx["signed_up_events"] = signed_up
-        ctx["other_events"] = other
+            ctx["created_events"] = created
+            ctx["signed_up_events"] = signed_up
+            ctx["other_events"] = other
+        else:
+            ctx["user_products"] = None
+            ctx["other_events"] = Event.objects.all()
+        
         ctx["is_organizer"] = is_organizer
         return ctx
 

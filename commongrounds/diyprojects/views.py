@@ -26,7 +26,8 @@ class ProjectListView(ListView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
 
-        if user.is_authenticated:
+        is_creator = False
+        if user.is_authenticated and hasattr(user, "profile"):
             profile = user.profile
 
             created = Project.objects.filter(creator=profile)
@@ -35,9 +36,6 @@ class ProjectListView(ListView):
                 reviews__reviewer=profile
             ).distinct()
 
-            context["created_projects"] = created
-            context["favorited_projects"] = favorited
-            context["reviewed_projects"] = reviewed
 
             created_ids = list(created.values_list("id", flat=True))
             favorited_ids = list(favorited.values_list("id", flat=True))
@@ -46,21 +44,33 @@ class ProjectListView(ListView):
             is_creator = profile.roles.filter(
                 name="Project Creator"
             ).exists()
-            context["is_creator"] = is_creator
+
+            context["created_projects"] = created
+            context["favorited_projects"] = favorited
+            context["reviewed_projects"] = reviewed
             context["all_projects"] = Project.objects.exclude(
                 id__in=excluded_ids
             )
+        else:
+            context["all_projects"] = Project.objects.all()
 
+        context["is_creator"] = is_creator
         return context
 
 
-class ProjectDetailView(LoginRequiredMixin, DetailView):
+class ProjectDetailView(DetailView):
     model = Project
     template_name = "diyprojects/projects/project_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_profile = self.request.user.profile
+        user = self.request.user
+        if user.is_authenticated and hasattr(user, "profile"):
+            user_profile = self.request.user.profile
+            context["is_favorited"] = Favorite.objects.filter(
+                project=self.object, profile=user_profile
+            ).exists()
+
         context["avg_rating"] = self.object.ratings.aggregate(Avg("score"))[
             "score__avg"
         ]
@@ -68,9 +78,6 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
             project=self.object
         ).count()
         context["review_form"] = ReviewForm()
-        context["is_favorited"] = Favorite.objects.filter(
-            project=self.object, profile=user_profile
-        ).exists()
 
         return context
 
@@ -124,7 +131,11 @@ def add_review(request, pk):
         if form.is_valid():
             review = form.save(commit=False)
             review.project = project
-            review.reviewer = request.user.profile
+            if request.user.is_authenticated:
+                review.reviewer = request.user.profile
+            else:
+                review.reviewer = None
+
             review.save()
             return redirect("diyprojects:project_detail", pk=pk)
         else:

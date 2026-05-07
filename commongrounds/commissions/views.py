@@ -25,6 +25,7 @@ class CommissionListView(TemplateView):
         ctx = super().get_context_data(**kwargs)
         user = self.request.user
 
+        is_maker = False
         if user.is_authenticated:
             user_profile = user.profile
             created = Commission.objects.filter(maker=user_profile)
@@ -34,14 +35,14 @@ class CommissionListView(TemplateView):
             other = Commission.objects.exclude(
                 id__in=created.values("id")
             ).exclude(id__in=applied.values("id"))
+            is_maker = user_profile.roles.filter(
+                name="Commission Maker"
+            ).exists()
         else:
             created = Commission.objects.none()
             applied = Commission.objects.none()
             other = Commission.objects.all()
 
-        is_maker = user_profile.roles.filter(
-            name="Commission Maker"
-        ).exists()
         ctx["created_commissions"] = created
         ctx["applied_commissions"] = applied
         ctx["other_commissions"] = other
