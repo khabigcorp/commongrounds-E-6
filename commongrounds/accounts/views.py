@@ -9,7 +9,8 @@ from commissions.models import Commission
 from diyprojects.models import Project
 from localevents.models import Event
 from merchstore.models import Product
-from .forms import UserAndProfileCreationForm
+from .services import create_profile_for_user
+from .forms import RegisterForm
 # Create your views here.
 class AccountUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
@@ -23,24 +24,23 @@ class AccountUpdateView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(Profile, user__username=self.kwargs["username"])
 
 
+
 class RegisterView(TemplateView):
     template_name = "register.html"
+
     def get(self, request):
         return render(request, "register.html", {
-            "user_form": UserAndProfileCreationForm(),
+            "user_form": RegisterForm(),
         })
 
     def post(self, request):
-        user_form = UserAndProfileCreationForm(request.POST)
-
+        user_form = RegisterForm(request.POST)
         if user_form.is_valid():
             user = user_form.save()
-            Profile.objects.create(
-                user=user,
-                display_name=user_form.cleaned_data["display_name"],
-                email_address=user_form.cleaned_data["email"]
-            )
-
+            profile = user.profile
+            profile.display_name = user_form.cleaned_data["display_name"]
+            profile.email_address = user_form.cleaned_data["email"]
+            profile.save()
             return redirect("login")
 
         return render(request, "register.html", {
