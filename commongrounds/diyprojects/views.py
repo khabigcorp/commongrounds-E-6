@@ -43,7 +43,10 @@ class ProjectListView(ListView):
             favorited_ids = list(favorited.values_list("id", flat=True))
             reviewed_ids = list(reviewed.values_list("id", flat=True))
             excluded_ids = set(created_ids + favorited_ids + reviewed_ids)
-
+            is_creator = profile.roles.filter(
+                name="Project Creator"
+            ).exists()
+            context["is_creator"] = is_creator
             context["all_projects"] = Project.objects.exclude(
                 id__in=excluded_ids
             )

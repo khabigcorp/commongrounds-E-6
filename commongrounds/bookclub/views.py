@@ -24,10 +24,15 @@ def book_list(request):
             .exclude(bookreview__user_reviewer=profile)
         )
 
+        is_contributor = profile.roles.filter(
+            name="Market Seller"
+        ).exists()
+        
         ctx["all_books"] = user_books
         ctx["contributed_books"] = contributed
         ctx["bookmarked_books"] = bookmarked
         ctx["reviewed_books"] = reviewed
+        ctx["is_contributor"] = is_contributor
 
     return render(request, "bookclub/book_list.html", ctx)
 

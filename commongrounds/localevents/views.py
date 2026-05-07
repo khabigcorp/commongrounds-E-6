@@ -28,10 +28,14 @@ class EventListView(ListView):
             other = Event.objects.exclude(id__in=created.values("id")).exclude(
                 id__in=signed_up.values("id")
             )
+            is_organizer = user_profile.roles.filter(
+                name="Event Organizer"
+            ).exists()
 
         ctx["created_events"] = created
         ctx["signed_up_events"] = signed_up
         ctx["other_events"] = other
+        ctx["is_organizer"] = is_organizer
         return ctx
 
 

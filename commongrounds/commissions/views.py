@@ -39,9 +39,13 @@ class CommissionListView(TemplateView):
             applied = Commission.objects.none()
             other = Commission.objects.all()
 
+        is_maker = user_profile.roles.filter(
+            name="Commission Maker"
+        ).exists()
         ctx["created_commissions"] = created
         ctx["applied_commissions"] = applied
         ctx["other_commissions"] = other
+        ctx["is_maker"] = is_maker
         return ctx
 
 

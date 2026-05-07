@@ -1,6 +1,12 @@
 {% extends "base.html" %} {% block title %}Merchandise List{% endblock %} {% block body %}
 <h2>Merchandise Store</h2>
 
+{% if request.user.is_authenticated and is_seller %}
+<p>
+    <a href="{% url 'merchstore:item_add' %}">+ Create Product</a>
+</p>
+{% endif %}
+
 {% if request.user.is_authenticated %}
 <p>
     <a href="{% url 'merchstore:cart' %}" style="font-weight: bold">View Your Cart</a>
@@ -25,11 +31,6 @@
     <li>No products posted yet.</li>
     {% endfor %}
 </ul>
-{% endif %}
-{% if request.user.is_authenticated and is_seller %}
-<p>
-    <a href="{% url 'merchstore:item_add' %}">Add a New Product</a>
-</p>
 {% endif %}
 
 <hr />

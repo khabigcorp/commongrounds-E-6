@@ -1,9 +1,8 @@
 {% extends 'base.html' %} {% block heading_text %} Event List {% endblock%} {% block body %}
-
-{% if user.is_authenticated %}
+{% if user.is_authenticated and is_organizer %}
     <a href="{% url 'localevents:event_create' %}" >+ Create Event</a>
-    <br><br>
-        
+{% endif %}
+{% if user.is_authenticated %}
     <h3>Events Created</h3>
     <ul>
         {% for event in created_events %}

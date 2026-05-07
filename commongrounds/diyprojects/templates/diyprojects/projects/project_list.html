@@ -1,17 +1,12 @@
 {% extends 'base.html' %}
 
 {% block body %}
+    {% if user.is_authenticated and is_creator %}
+        <a href="{% url 'diyprojects:project_create' %}" class="btn btn-success">
+            + Create Project
+        </a>
+    {% endif %}
     {% if user.is_authenticated %}
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <h1>My Dashboard</h1>
-            
-            <a href="{% url 'diyprojects:project_create' %}" class="btn btn-success">
-                + Create New Project
-            </a>
-        </div>
-
-        <hr>
-
         <h3>My Projects (Created)</h3>
         <ul>
             {% for p in created_projects %}
