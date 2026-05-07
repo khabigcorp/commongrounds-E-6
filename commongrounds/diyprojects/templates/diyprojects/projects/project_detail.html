@@ -99,6 +99,9 @@
                                     </strong>
                                 </p>
                                 <p class="mb-0 small text-muted">{{ review.created_at|date:"M d, Y" }}</p>
+                                {% if review.image %}
+                                    <img src="{{ review.image.url }}" alt="Review Image" style="width: 50px" />
+                                {% endif %}
                                 <p class="mt-1">{{ review.comment }}</p>
                             </div>
                         {% empty %}

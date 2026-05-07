@@ -1,4 +1,7 @@
 {% extends 'base.html' %} {% block heading_text %} {{ event.title }} {% endblock %} {% block body %}
+{% if event.event_image %}
+    <img src="{{ event.event_image.url }}" alt="{{ event.title }}" style="width: 300px" />
+{% endif %}
 <p>
     <strong>Category:</strong>
     {{ event.category.name|default:"No Category" }}

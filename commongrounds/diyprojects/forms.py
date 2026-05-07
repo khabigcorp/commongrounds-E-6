@@ -5,7 +5,7 @@ from .models import ProjectReview, Project, ProjectRating
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = ProjectReview
-        fields = ["comment"]
+        fields = ["comment", "image"]
         widgets = {
             "comment": forms.Textarea(
                 attrs={

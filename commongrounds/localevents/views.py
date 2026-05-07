@@ -114,14 +114,12 @@ class EventCreateView(LoginRequiredMixin, RoleRequiredMixin, CreateView):
     ]
     template_name = "localevents/event_create.html"
     allowed_roles = ["Event Organizer"]
-
+    def get_absolute_url(self):
+        return reverse("localevents:event_detail", kwargs={"pk": self.pk})
     def form_valid(self, form):
-        super().form_valid(form)
+        response = super().form_valid(form)
         self.object.organizers.add(self.request.user.profile)
-        redirect_url = reverse(
-            "localevents:event_detail", kwargs={"pk": self.object.pk}
-        )
-        return redirect(redirect_url)
+        return response
 
 
 class EventUpdateView(LoginRequiredMixin, RoleRequiredMixin, UpdateView):

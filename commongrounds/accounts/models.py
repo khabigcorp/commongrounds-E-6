@@ -22,4 +22,8 @@ class Profile(models.Model):
     def __str__(self):
         if self.display_name:
             return self.display_name
-        return self.user.username
+
+        if self.user:
+            return self.user.username
+
+        return "Unnamed Profile"

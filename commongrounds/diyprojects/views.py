@@ -126,7 +126,7 @@ def toggle_favorite(request, pk):
 def add_review(request, pk):
     project = get_object_or_404(Project, pk=pk)
     if request.method == "POST":
-        form = ReviewForm(request.POST)
+        form = ReviewForm(request.POST, request.FILES)
 
         if form.is_valid():
             review = form.save(commit=False)
@@ -135,7 +135,6 @@ def add_review(request, pk):
                 review.reviewer = request.user.profile
             else:
                 review.reviewer = None
-
             review.save()
             return redirect("diyprojects:project_detail", pk=pk)
         else:
