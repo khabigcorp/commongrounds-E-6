@@ -58,10 +58,6 @@ class ProductListView(ListView):
                     if existing_transaction:
                         existing_transaction.amount += pending["amount"]
                         existing_transaction.save()
-                        product.stock = max(0, product.stock - pending["amount"])
-                        if product.stock == 0:
-                            product.status = "Out of stock"
-                        product.save()
                     else:
                         Transaction.objects.create(
                             buyer=request.user.profile,
@@ -100,11 +96,6 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = kwargs.get("form", TransactionForm())
-        user = self.request.user
-
-        is_seller = False
-        if user.is_authenticated and hasattr(user, "profile"):
-            is_seller = user.profile.roles.filter(name="Market Seller").exists()
 
         if self.object.stock > 0:
             form.fields["amount"].widget.attrs.update(
@@ -116,7 +107,6 @@ class ProductDetailView(DetailView):
             )
 
         context["form"] = form
-        context["is_seller"] = is_seller
         return context
 
     def post(self, request, *args, **kwargs):
