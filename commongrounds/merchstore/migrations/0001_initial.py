@@ -9,47 +9,132 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('accounts', '0002_role_profile_roles'),
+        ("accounts", "0002_role_profile_roles"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ProductType',
+            name="ProductType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("description", models.TextField()),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('product_image', models.ImageField(blank=True, null=True, upload_to='merchstore/images/')),
-                ('description', models.TextField()),
-                ('price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('stock', models.PositiveIntegerField()),
-                ('status', models.CharField(choices=[('Available', 'Available'), ('On sale', 'On sale'), ('Out of stock', 'Out of stock')], default='Available', max_length=20)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='products', to='accounts.profile')),
-                ('product_type', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='products', to='merchstore.producttype')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "product_image",
+                    models.ImageField(
+                        blank=True, null=True, upload_to="merchstore/images/"
+                    ),
+                ),
+                ("description", models.TextField()),
+                (
+                    "price",
+                    models.DecimalField(decimal_places=2, max_digits=10),
+                ),
+                ("stock", models.PositiveIntegerField()),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("Available", "Available"),
+                            ("On sale", "On sale"),
+                            ("Out of stock", "Out of stock"),
+                        ],
+                        default="Available",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="products",
+                        to="accounts.profile",
+                    ),
+                ),
+                (
+                    "product_type",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="products",
+                        to="merchstore.producttype",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='Transaction',
+            name="Transaction",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.PositiveIntegerField()),
-                ('status', models.CharField(choices=[('On cart', 'On cart'), ('To Pay', 'To Pay'), ('To Ship', 'To Ship'), ('To Receive', 'To Receive'), ('Delivered', 'Delivered')], max_length=20)),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('buyer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='purchases', to='accounts.profile')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transactions', to='merchstore.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("amount", models.PositiveIntegerField()),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("On cart", "On cart"),
+                            ("To Pay", "To Pay"),
+                            ("To Ship", "To Ship"),
+                            ("To Receive", "To Receive"),
+                            ("Delivered", "Delivered"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                (
+                    "buyer",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="purchases",
+                        to="accounts.profile",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="transactions",
+                        to="merchstore.product",
+                    ),
+                ),
             ],
         ),
     ]

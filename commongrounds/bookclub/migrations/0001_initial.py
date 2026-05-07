@@ -9,68 +9,164 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('accounts', '0002_role_profile_roles'),
+        ("accounts", "0002_role_profile_roles"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Genre',
+            name="Genre",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("description", models.TextField()),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='Book',
+            name="Book",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('author', models.CharField(max_length=255)),
-                ('synopsis', models.TextField()),
-                ('publication_year', models.IntegerField()),
-                ('available_to_borrow', models.BooleanField(default=True)),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('updated_on', models.DateTimeField(auto_now=True)),
-                ('contributor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='accounts.profile')),
-                ('genre', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='bookclub.genre')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("author", models.CharField(max_length=255)),
+                ("synopsis", models.TextField()),
+                ("publication_year", models.IntegerField()),
+                ("available_to_borrow", models.BooleanField(default=True)),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                ("updated_on", models.DateTimeField(auto_now=True)),
+                (
+                    "contributor",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="accounts.profile",
+                    ),
+                ),
+                (
+                    "genre",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="bookclub.genre",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-publication_year'],
+                "ordering": ["-publication_year"],
             },
         ),
         migrations.CreateModel(
-            name='Bookmark',
+            name="Bookmark",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date_bookmarked', models.DateField(auto_now_add=True)),
-                ('book', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='bookclub.book')),
-                ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.profile')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date_bookmarked", models.DateField(auto_now_add=True)),
+                (
+                    "book",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="bookclub.book",
+                    ),
+                ),
+                (
+                    "profile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="accounts.profile",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='BookReview',
+            name="BookReview",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('anon_reviewer', models.TextField(blank=True)),
-                ('title', models.CharField(max_length=255)),
-                ('comment', models.TextField()),
-                ('book', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='bookclub.book')),
-                ('user_reviewer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.profile')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("anon_reviewer", models.TextField(blank=True)),
+                ("title", models.CharField(max_length=255)),
+                ("comment", models.TextField()),
+                (
+                    "book",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="bookclub.book",
+                    ),
+                ),
+                (
+                    "user_reviewer",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="accounts.profile",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Borrow',
+            name="Borrow",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=255)),
-                ('date_borrowed', models.DateField()),
-                ('date_to_return', models.DateField()),
-                ('book', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='bookclub.book')),
-                ('borrower', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.profile')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=255)),
+                ("date_borrowed", models.DateField()),
+                ("date_to_return", models.DateField()),
+                (
+                    "book",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="bookclub.book",
+                    ),
+                ),
+                (
+                    "borrower",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="accounts.profile",
+                    ),
+                ),
             ],
         ),
     ]

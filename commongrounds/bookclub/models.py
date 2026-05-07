@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+
 # Create your models here.
 
 
@@ -8,7 +9,7 @@ class Genre(models.Model):
     description = models.TextField()
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -20,7 +21,7 @@ class Book(models.Model):
         Genre, on_delete=models.SET_NULL, null=True, blank=True
     )
     contributor = models.ForeignKey(
-        'accounts.Profile', on_delete=models.SET_NULL, null=True, blank=True
+        "accounts.Profile", on_delete=models.SET_NULL, null=True, blank=True
     )
     author = models.CharField(max_length=255)
     synopsis = models.TextField()
@@ -30,7 +31,7 @@ class Book(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-publication_year']
+        ordering = ["-publication_year"]
 
     def __str__(self):
         return self.title
@@ -38,7 +39,7 @@ class Book(models.Model):
 
 class BookReview(models.Model):
     user_reviewer = models.ForeignKey(
-        'accounts.Profile', on_delete=models.CASCADE, null=True, blank=True
+        "accounts.Profile", on_delete=models.CASCADE, null=True, blank=True
     )
     anon_reviewer = models.TextField(blank=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -46,13 +47,12 @@ class BookReview(models.Model):
     comment = models.TextField()
 
     def __str__(self):
-        return f"Review of {self.book.title} by {self.user_reviewer or self.anon_reviewer}"
+        author = self.user_reviewer or self.anon_reviewer
+        return f"Review of {self.book.title} by {author}"
 
 
 class Bookmark(models.Model):
-    profile = models.ForeignKey(
-        'accounts.Profile', on_delete=models.CASCADE
-    )
+    profile = models.ForeignKey("accounts.Profile", on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     date_bookmarked = models.DateField(auto_now_add=True)
 
@@ -63,7 +63,7 @@ class Bookmark(models.Model):
 class Borrow(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     borrower = models.ForeignKey(
-        'accounts.Profile', on_delete=models.CASCADE, null=True, blank=True
+        "accounts.Profile", on_delete=models.CASCADE, null=True, blank=True
     )
     name = models.CharField(max_length=255, blank=True)
     date_borrowed = models.DateField()

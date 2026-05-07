@@ -24,7 +24,7 @@ from .views import HomePageView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("accounts/", include('accounts.urls')),
+    path("accounts/", include("accounts.urls")),
     path("bookclub/", include("bookclub.urls")),
     path("localevents/", include("localevents.urls")),
     path("diyprojects/", include("diyprojects.urls")),
@@ -35,4 +35,6 @@ urlpatterns = [
 
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )

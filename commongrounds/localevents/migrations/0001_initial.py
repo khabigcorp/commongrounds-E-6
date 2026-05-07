@@ -9,49 +9,120 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('accounts', '0002_role_profile_roles'),
+        ("accounts", "0002_role_profile_roles"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='EventType',
+            name="EventType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("description", models.TextField()),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('event_image', models.ImageField(blank=True, null=True, upload_to='event_images/')),
-                ('description', models.TextField()),
-                ('location', models.CharField(max_length=255)),
-                ('start_time', models.DateTimeField()),
-                ('end_time', models.DateTimeField()),
-                ('event_capacity', models.PositiveIntegerField(default=10)),
-                ('status', models.CharField(choices=[('Available', 'Available'), ('Full', 'Full'), ('Done', 'Done'), ('Cancelled', 'Cancelled')], default='Available', max_length=20)),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('updated_on', models.DateTimeField(auto_now=True)),
-                ('organizers', models.ManyToManyField(blank=True, to='accounts.profile')),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='localevents.eventtype')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                (
+                    "event_image",
+                    models.ImageField(
+                        blank=True, null=True, upload_to="event_images/"
+                    ),
+                ),
+                ("description", models.TextField()),
+                ("location", models.CharField(max_length=255)),
+                ("start_time", models.DateTimeField()),
+                ("end_time", models.DateTimeField()),
+                ("event_capacity", models.PositiveIntegerField(default=10)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("Available", "Available"),
+                            ("Full", "Full"),
+                            ("Done", "Done"),
+                            ("Cancelled", "Cancelled"),
+                        ],
+                        default="Available",
+                        max_length=20,
+                    ),
+                ),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                ("updated_on", models.DateTimeField(auto_now=True)),
+                (
+                    "organizers",
+                    models.ManyToManyField(blank=True, to="accounts.profile"),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="localevents.eventtype",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-created_on'],
+                "ordering": ["-created_on"],
             },
         ),
         migrations.CreateModel(
-            name='EventSignup',
+            name="EventSignup",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('new_registrant', models.CharField(blank=True, max_length=255, null=True)),
-                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='signups', to='localevents.event')),
-                ('user_registrant', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='user_signups', to='accounts.profile')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "new_registrant",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
+                    "event",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="signups",
+                        to="localevents.event",
+                    ),
+                ),
+                (
+                    "user_registrant",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="user_signups",
+                        to="accounts.profile",
+                    ),
+                ),
             ],
         ),
     ]

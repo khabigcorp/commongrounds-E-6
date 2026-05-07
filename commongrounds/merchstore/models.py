@@ -25,7 +25,10 @@ class Product(models.Model):
 
     name = models.CharField(max_length=255)
     product_type = models.ForeignKey(
-        ProductType, on_delete=models.SET_NULL, null=True, related_name="products"
+        ProductType,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="products",
     )
     owner = models.ForeignKey(
         Profile, on_delete=models.CASCADE, related_name="products"
@@ -35,7 +38,9 @@ class Product(models.Model):
     )
     description = models.TextField()
     price = models.DecimalField(
-        max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.01"))]
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal("0.01"))],
     )
     stock = models.PositiveIntegerField()
     status = models.CharField(
@@ -73,6 +78,8 @@ class Transaction(models.Model):
 
     def __str__(self):
         buyer_name = (
-            self.buyer.user.username if self.buyer and self.buyer.user else "Guest"
+            self.buyer.user.username
+            if self.buyer and self.buyer.user
+            else "Guest"
         )
         return f"{self.amount} x {self.product.name} (Buyer: {buyer_name})"

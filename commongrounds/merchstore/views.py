@@ -6,7 +6,10 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from django.views import View
 from accounts.mixins import RoleRequiredMixin
 from merchstore.models import Product, Transaction
-from merchstore.strategies import AuthenticatedPurchaseStrategy, GuestPurchaseStrategy
+from merchstore.strategies import (
+    AuthenticatedPurchaseStrategy,
+    GuestPurchaseStrategy,
+)
 
 
 class TransactionForm(forms.ModelForm):
@@ -39,13 +42,18 @@ class ProductListView(ListView):
     context_object_name = "all_products"
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated and "pending_transaction" in request.session:
+        if (
+            request.user.is_authenticated
+            and "pending_transaction" in request.session
+        ):
             pending = request.session.pop("pending_transaction")
             try:
                 product = Product.objects.get(pk=pending["product_id"])
                 if product.owner != request.user.profile:
                     existing_transaction = Transaction.objects.filter(
-                        buyer=request.user.profile, product=product, status="On cart"
+                        buyer=request.user.profile,
+                        product=product,
+                        status="On cart",
                     ).first()
 
                     if existing_transaction:
@@ -70,9 +78,15 @@ class ProductListView(ListView):
         is_seller = False
         if user.is_authenticated and hasattr(user, "profile"):
             user_profile = user.profile
-            is_seller = user_profile.roles.filter(name="Market Seller").exists()
-            context["user_products"] = Product.objects.filter(owner=user_profile)
-            context["all_products"] = Product.objects.exclude(owner=user_profile)
+            is_seller = user_profile.roles.filter(
+                name="Market Seller"
+            ).exists()
+            context["user_products"] = Product.objects.filter(
+                owner=user_profile
+            )
+            context["all_products"] = Product.objects.exclude(
+                owner=user_profile
+            )
         else:
             context["user_products"] = None
             context["all_products"] = Product.objects.all()
@@ -117,7 +131,9 @@ class ProductDetailView(DetailView):
                 form.add_error(
                     "amount", f"Only {self.object.stock} items left in stock."
                 )
-                return self.render_to_response(self.get_context_data(form=form))
+                return self.render_to_response(
+                    self.get_context_data(form=form)
+                )
 
             if request.user.is_authenticated:
                 strategy = AuthenticatedPurchaseStrategy()
@@ -136,7 +152,9 @@ class ProductCreateView(RoleRequiredMixin, CreateView):
     allowed_roles = ["Market Seller"]
 
     def get_success_url(self):
-        return reverse_lazy("merchstore:item_detail", kwargs={"pk": self.object.pk})
+        return reverse_lazy(
+            "merchstore:item_detail", kwargs={"pk": self.object.pk}
+        )
 
     def form_valid(self, form):
         product = form.save(commit=False)
@@ -158,7 +176,9 @@ class ProductUpdateView(RoleRequiredMixin, UpdateView):
     allowed_roles = ["Market Seller"]
 
     def get_success_url(self):
-        return reverse_lazy("merchstore:item_detail", kwargs={"pk": self.object.pk})
+        return reverse_lazy(
+            "merchstore:item_detail", kwargs={"pk": self.object.pk}
+        )
 
     def form_valid(self, form):
         product = form.save(commit=False)
@@ -217,7 +237,9 @@ class TransactionListView(LoginRequiredMixin, ListView):
     context_object_name = "transactions"
 
     def get_queryset(self):
-        return Transaction.objects.filter(product__owner=self.request.user.profile)
+        return Transaction.objects.filter(
+            product__owner=self.request.user.profile
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

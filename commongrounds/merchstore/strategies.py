@@ -5,7 +5,9 @@ from merchstore.models import Transaction
 
 class BaseTransactionStrategy:
     def execute(self, *args, **kwargs):
-        raise NotImplementedError("Subclasses must implement the execute method.")
+        raise NotImplementedError(
+            "Subclasses must implement the execute method."
+        )
 
 
 class AuthenticatedPurchaseStrategy(BaseTransactionStrategy):

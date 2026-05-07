@@ -1,7 +1,15 @@
 """Admin module of commissions project."""
 
 from django.contrib import admin
-from .models import CommissionType, Commission, JobStatus, ApplicationStatus, Job, JobApplication
+from .models import (
+    CommissionType,
+    Commission,
+    JobStatus,
+    ApplicationStatus,
+    Job,
+    JobApplication,
+)
+
 # Register your models here.
 
 
@@ -10,7 +18,7 @@ class CommissionTypeAdmin(admin.ModelAdmin):
 
 
 class CommissionAdmin(admin.ModelAdmin):
-    list_display = ('commission_type', 'maker', 'status', 'created_on')
+    list_display = ("commission_type", "maker", "status", "created_on")
     model = Commission
 
 
@@ -23,12 +31,12 @@ class ApplicationStatusAdmin(admin.ModelAdmin):
 
 
 class JobAdmin(admin.ModelAdmin):
-    list_display = ('commission', 'role', 'manpower_required', 'status')
+    list_display = ("commission", "role", "manpower_required", "status")
     model = Job
 
 
 class JobApplicationAdmin(admin.ModelAdmin):
-    list_display = ('job', 'applicant', 'status', 'applied_on')
+    list_display = ("job", "applicant", "status", "applied_on")
     model = JobApplication
 
 

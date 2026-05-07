@@ -13,6 +13,7 @@ class EventSignupInLine(admin.TabularInline):
     model = EventSignup
     extra = 0
 
+
 class EventTypeAdmin(admin.ModelAdmin):
     list_display = ("name", "description")
     search_fields = ("name",)

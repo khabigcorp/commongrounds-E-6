@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Book, Genre, BookReview, Bookmark, Borrow
+
 # Register your models here.
 
 

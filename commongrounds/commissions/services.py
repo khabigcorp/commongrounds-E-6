@@ -6,7 +6,7 @@ from .models import (
     Job,
     JobApplication,
     JobStatus,
-    ApplicationStatus
+    ApplicationStatus,
 )
 
 
@@ -16,16 +16,10 @@ class CommissionService:
     def create_commission(author, data, jobs_data):
         """Creates a Commission and its Jobs atomically."""
         with transaction.atomic():
-            commission = Commission.objects.create(
-                maker=author,
-                **data
-            )
+            commission = Commission.objects.create(maker=author, **data)
 
             for job_data in jobs_data:
-                Job.objects.create(
-                    commission=commission,
-                    **job_data
-                )
+                Job.objects.create(commission=commission, **job_data)
 
             return commission
 
@@ -33,16 +27,14 @@ class CommissionService:
     def apply_to_job(applicant, job):
         """Apply to a job with validation:"""
         if JobApplication.objects.filter(
-            job=job,
-            applicant=applicant
+            job=job, applicant=applicant
         ).exists():
             raise ValueError("Already applied to this job")
 
         accepted_status = ApplicationStatus.objects.get(name="ACCEPTED")
 
         accepted_count = JobApplication.objects.filter(
-            job=job,
-            status=accepted_status
+            job=job, status=accepted_status
         ).count()
 
         if accepted_count >= job.manpower_required:
@@ -51,9 +43,7 @@ class CommissionService:
         pending_status = ApplicationStatus.objects.get(name="PENDING")
 
         return JobApplication.objects.create(
-            job=job,
-            applicant=applicant,
-            status=pending_status
+            job=job, applicant=applicant, status=pending_status
         )
 
     @staticmethod
@@ -75,22 +65,21 @@ class CommissionService:
     def get_commission_summary(commission):
         """Summarize commission status (open/free manpower)"""
         total_manpower = (
-            commission.jobs.aggregate(
-                total=Sum("manpower_required")
-            )["total"] or 0
+            commission.jobs.aggregate(total=Sum("manpower_required"))["total"]
+            or 0
         )
 
         accepted_status = ApplicationStatus.objects.get(name="ACCEPTED")
 
         accepted_count = JobApplication.objects.filter(
-            job__commission=commission,
-            status=accepted_status
+            job__commission=commission, status=accepted_status
         ).count()
 
         return {
             "total_manpower": total_manpower,
-            "open_manpower": total_manpower - accepted_count
+            "open_manpower": total_manpower - accepted_count,
         }
+
 
 def update_commission_status(commission):
     full_status = JobStatus.objects.get(name="FULL")

@@ -10,64 +10,182 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('accounts', '0002_role_profile_roles'),
+        ("accounts", "0002_role_profile_roles"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ProjectCategory',
+            name="ProjectCategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
             ],
             options={
-                'ordering': ['-name'],
+                "ordering": ["-name"],
             },
         ),
         migrations.CreateModel(
-            name='Project',
+            name="Project",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('description', models.TextField(blank=True)),
-                ('materials', models.TextField(blank=True)),
-                ('steps', models.TextField(blank=True)),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('updated_on', models.DateTimeField(auto_now=True)),
-                ('creator', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='accounts.profile')),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='category', to='diyprojects.projectcategory')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("description", models.TextField(blank=True)),
+                ("materials", models.TextField(blank=True)),
+                ("steps", models.TextField(blank=True)),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                ("updated_on", models.DateTimeField(auto_now=True)),
+                (
+                    "creator",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="accounts.profile",
+                    ),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="category",
+                        to="diyprojects.projectcategory",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-created_on'],
+                "ordering": ["-created_on"],
             },
         ),
         migrations.CreateModel(
-            name='Favorite',
+            name="Favorite",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date_favorited', models.DateField(auto_now_add=True)),
-                ('project_status', models.CharField(choices=[('Backlog', 'Backlog'), ('To-do', 'To-do'), ('Done', 'Done')], default='Backlog', max_length=10)),
-                ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.profile')),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='diyprojects.project')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date_favorited", models.DateField(auto_now_add=True)),
+                (
+                    "project_status",
+                    models.CharField(
+                        choices=[
+                            ("Backlog", "Backlog"),
+                            ("To-do", "To-do"),
+                            ("Done", "Done"),
+                        ],
+                        default="Backlog",
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "profile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="accounts.profile",
+                    ),
+                ),
+                (
+                    "project",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="diyprojects.project",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ProjectRating',
+            name="ProjectRating",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('score', models.IntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(10)])),
-                ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.profile')),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ratings', to='diyprojects.project')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "score",
+                    models.IntegerField(
+                        validators=[
+                            django.core.validators.MinValueValidator(1),
+                            django.core.validators.MaxValueValidator(10),
+                        ]
+                    ),
+                ),
+                (
+                    "profile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="accounts.profile",
+                    ),
+                ),
+                (
+                    "project",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="ratings",
+                        to="diyprojects.project",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ProjectReview',
+            name="ProjectReview",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('comment', models.TextField()),
-                ('image', models.ImageField(blank=True, null=True, upload_to='project_reviews/')),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='diyprojects.project')),
-                ('reviewer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.profile')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("comment", models.TextField()),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True, null=True, upload_to="project_reviews/"
+                    ),
+                ),
+                (
+                    "project",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="reviews",
+                        to="diyprojects.project",
+                    ),
+                ),
+                (
+                    "reviewer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="accounts.profile",
+                    ),
+                ),
             ],
         ),
     ]

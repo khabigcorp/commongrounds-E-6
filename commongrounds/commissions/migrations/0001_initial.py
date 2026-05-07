@@ -10,96 +10,207 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('accounts', '0002_role_profile_roles'),
+        ("accounts", "0002_role_profile_roles"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ApplicationStatus',
+            name="ApplicationStatus",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=20, unique=True)),
-                ('order', models.PositiveIntegerField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=20, unique=True)),
+                ("order", models.PositiveIntegerField()),
             ],
             options={
-                'verbose_name': 'Application Status',
-                'verbose_name_plural': 'Application Statuses',
-                'ordering': ['order'],
+                "verbose_name": "Application Status",
+                "verbose_name_plural": "Application Statuses",
+                "ordering": ["order"],
             },
         ),
         migrations.CreateModel(
-            name='CommissionType',
+            name="CommissionType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("description", models.TextField()),
             ],
             options={
-                'verbose_name': 'Commission Type',
-                'verbose_name_plural': 'Commission Types',
-                'ordering': ['name'],
+                "verbose_name": "Commission Type",
+                "verbose_name_plural": "Commission Types",
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='JobStatus',
+            name="JobStatus",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=20, unique=True)),
-                ('order', models.PositiveIntegerField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=20, unique=True)),
+                ("order", models.PositiveIntegerField()),
             ],
             options={
-                'verbose_name': 'Job Status',
-                'verbose_name_plural': 'Job Statuses',
-                'ordering': ['order'],
+                "verbose_name": "Job Status",
+                "verbose_name_plural": "Job Statuses",
+                "ordering": ["order"],
             },
         ),
         migrations.CreateModel(
-            name='Commission',
+            name="Commission",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('description', models.TextField()),
-                ('people_required', models.PositiveIntegerField()),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('updated_on', models.DateTimeField(auto_now=True)),
-                ('maker', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='accounts.profile')),
-                ('commission_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='commissions', to='commissions.commissiontype')),
-                ('status', models.ForeignKey(default=commissions.models.get_default_job_status, null=True, on_delete=django.db.models.deletion.PROTECT, to='commissions.jobstatus')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("description", models.TextField()),
+                ("people_required", models.PositiveIntegerField()),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                ("updated_on", models.DateTimeField(auto_now=True)),
+                (
+                    "maker",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="accounts.profile",
+                    ),
+                ),
+                (
+                    "commission_type",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="commissions",
+                        to="commissions.commissiontype",
+                    ),
+                ),
+                (
+                    "status",
+                    models.ForeignKey(
+                        default=commissions.models.get_default_job_status,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="commissions.jobstatus",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Commission',
-                'verbose_name_plural': 'Commissions',
-                'ordering': ['created_on'],
+                "verbose_name": "Commission",
+                "verbose_name_plural": "Commissions",
+                "ordering": ["created_on"],
             },
         ),
         migrations.CreateModel(
-            name='Job',
+            name="Job",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('role', models.CharField(max_length=255)),
-                ('manpower_required', models.PositiveIntegerField()),
-                ('commission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='jobs', to='commissions.commission')),
-                ('status', models.ForeignKey(default=commissions.models.get_default_job_status, null=True, on_delete=django.db.models.deletion.PROTECT, to='commissions.jobstatus')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("role", models.CharField(max_length=255)),
+                ("manpower_required", models.PositiveIntegerField()),
+                (
+                    "commission",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="jobs",
+                        to="commissions.commission",
+                    ),
+                ),
+                (
+                    "status",
+                    models.ForeignKey(
+                        default=commissions.models.get_default_job_status,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="commissions.jobstatus",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Job',
-                'verbose_name_plural': 'Jobs',
-                'ordering': ['-status', '-manpower_required', 'role'],
+                "verbose_name": "Job",
+                "verbose_name_plural": "Jobs",
+                "ordering": ["-status", "-manpower_required", "role"],
             },
         ),
         migrations.CreateModel(
-            name='JobApplication',
+            name="JobApplication",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('applied_on', models.DateTimeField(auto_now_add=True)),
-                ('applicant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='job_applications', to='accounts.profile')),
-                ('job', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='job_applications', to='commissions.job')),
-                ('status', models.ForeignKey(default=commissions.models.get_default_application_status, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='job_applications', to='commissions.applicationstatus')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("applied_on", models.DateTimeField(auto_now_add=True)),
+                (
+                    "applicant",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="job_applications",
+                        to="accounts.profile",
+                    ),
+                ),
+                (
+                    "job",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="job_applications",
+                        to="commissions.job",
+                    ),
+                ),
+                (
+                    "status",
+                    models.ForeignKey(
+                        default=commissions.models.get_default_application_status,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="job_applications",
+                        to="commissions.applicationstatus",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Job Application',
-                'verbose_name_plural': 'Job Applications',
-                'ordering': ['status', '-applied_on'],
+                "verbose_name": "Job Application",
+                "verbose_name_plural": "Job Applications",
+                "ordering": ["status", "-applied_on"],
             },
         ),
     ]

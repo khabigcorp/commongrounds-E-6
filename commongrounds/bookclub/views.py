@@ -5,7 +5,6 @@ from .models import Book, BookReview, Bookmark, Borrow
 from .forms import BookFormFactory, BorrowForm
 from accounts.decorators import role_required
 
-
 # Create your views here.
 
 
@@ -19,8 +18,11 @@ def book_list(request):
         bookmarked = Book.objects.filter(bookmark__profile=profile)
         reviewed = Book.objects.filter(bookreview__user_reviewer=profile)
 
-        user_books = books.exclude(contributor=profile).exclude(
-            bookmark__profile=profile).exclude(bookreview__user_reviewer=profile)
+        user_books = (
+            books.exclude(contributor=profile)
+            .exclude(bookmark__profile=profile)
+            .exclude(bookreview__user_reviewer=profile)
+        )
 
         ctx["all_books"] = user_books
         ctx["contributed_books"] = contributed
@@ -32,7 +34,7 @@ def book_list(request):
 
 def book_detail(request, id):
     book = Book.objects.get(id=id)
-    ReviewForm = BookFormFactory.get_form('review')
+    ReviewForm = BookFormFactory.get_form("review")
     form = ReviewForm()
 
     if request.method == "POST":
@@ -51,7 +53,8 @@ def book_detail(request, id):
     if request.user.is_authenticated:
         profile = request.user.profile
         already_bookmarked = Bookmark.objects.filter(
-            profile=profile, book=book).exists()
+            profile=profile, book=book
+        ).exists()
 
     ctx = {
         "book": book,
@@ -67,7 +70,7 @@ def book_detail(request, id):
 @login_required
 @role_required(["Book Contributor"])
 def book_create(request):
-    ContributeForm = BookFormFactory.get_form('contribute')
+    ContributeForm = BookFormFactory.get_form("contribute")
     form = ContributeForm()
 
     if request.method == "POST":
@@ -85,10 +88,10 @@ def book_create(request):
 @role_required(["Book Contributor"])
 def book_update(request, id):
     book = Book.objects.get(id=id)
-    UpdateForm = BookFormFactory.get_form('update')
+    UpdateForm = BookFormFactory.get_form("update")
     form = UpdateForm(instance=book)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UpdateForm(request.POST, instance=book)
         if form.is_valid():
             form.save()

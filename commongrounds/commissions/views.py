@@ -11,6 +11,7 @@ from django.http import HttpResponseForbidden
 from django.urls import reverse
 
 from .services import update_commission_status, CommissionService
+
 # Create your views here.
 
 
@@ -28,18 +29,16 @@ class CommissionListView(TemplateView):
             user_profile = user.profile
             created = Commission.objects.filter(maker=user_profile)
             applied = Commission.objects.filter(
-                        jobs__job_applications__applicant=user_profile
-                    ).distinct()
+                jobs__job_applications__applicant=user_profile
+            ).distinct()
             other = Commission.objects.exclude(
                 id__in=created.values("id")
-            ).exclude(
-                id__in=applied.values("id")
-            )
+            ).exclude(id__in=applied.values("id"))
         else:
             created = Commission.objects.none()
             applied = Commission.objects.none()
             other = Commission.objects.all()
-        
+
         ctx["created_commissions"] = created
         ctx["applied_commissions"] = applied
         ctx["other_commissions"] = other
@@ -58,12 +57,10 @@ class CommissionDetailView(TemplateView):
         commission = get_object_or_404(Commission, pk=commission_id)
         maker = commission.maker or None
         status = commission.status.__str__
-        jobs = Job.objects.filter( 
-            commission = commission 
-        ).annotate( 
+        jobs = Job.objects.filter(commission=commission).annotate(
             accepted_count=Count(
                 "job_applications",
-                filter=Q(job_applications__status__name="ACCEPTED")
+                filter=Q(job_applications__status__name="ACCEPTED"),
             )
         )
         summary = CommissionService.get_commission_summary(commission)
@@ -84,11 +81,13 @@ class CommissionDetailView(TemplateView):
 
 class CommissionCreateView(LoginRequiredMixin, RoleRequiredMixin, CreateView):
     """View to create commissions."""
+
     model = Commission
     form_class = CommissionForm
     template_name = "commissions/commission_create.html"
     success_url = "/commissions/requests/list"
     allowed_roles = ["Commission Maker"]
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
@@ -107,36 +106,51 @@ class CommissionCreateView(LoginRequiredMixin, RoleRequiredMixin, CreateView):
             jobs_data = []
 
             for job_form in job_formset:
-                if job_form.cleaned_data and not job_form.cleaned_data.get("DELETE", False):
-                    jobs_data.append({
-                        "role": job_form.cleaned_data["role"],
-                        "manpower_required": job_form.cleaned_data["manpower_required"],
-                        "status": job_form.cleaned_data["status"],
-                    })
+                if job_form.cleaned_data and not job_form.cleaned_data.get(
+                    "DELETE", False
+                ):
+                    jobs_data.append(
+                        {
+                            "role": job_form.cleaned_data["role"],
+                            "manpower_required": job_form.cleaned_data[
+                                "manpower_required"
+                            ],
+                            "status": job_form.cleaned_data["status"],
+                        }
+                    )
             form.cleaned_data.pop("maker", None)
             self.object = CommissionService.create_commission(
                 author=self.request.user.profile,
                 data=form.cleaned_data,
-                jobs_data=jobs_data
+                jobs_data=jobs_data,
             )
 
-            return redirect(reverse('commissions:commission_detail', kwargs={'pk': self.object.pk}))
+            return redirect(
+                reverse(
+                    "commissions:commission_detail",
+                    kwargs={"pk": self.object.pk},
+                )
+            )
 
         return self.render_to_response(self.get_context_data(form=form))
 
-    
+
 class CommissionUpdateView(LoginRequiredMixin, RoleRequiredMixin, UpdateView):
     """View to update commissions."""
+
     model = Commission
     form_class = CommissionForm
     template_name = "commissions/commission_update.html"
     success_url = "/commissions/requests/list"
     allowed_roles = ["Commission Maker"]
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
         if self.request.POST:
-            ctx["job_formset"] = JobFormSet(self.request.POST, instance=self.object)
+            ctx["job_formset"] = JobFormSet(
+                self.request.POST, instance=self.object
+            )
         else:
             ctx["job_formset"] = JobFormSet(instance=self.object)
 
@@ -153,7 +167,12 @@ class CommissionUpdateView(LoginRequiredMixin, RoleRequiredMixin, UpdateView):
 
             CommissionService.sync_commission_status(self.object)
 
-            return redirect(reverse('commissions:commission_detail', kwargs={'pk': self.object.pk}))
+            return redirect(
+                reverse(
+                    "commissions:commission_detail",
+                    kwargs={"pk": self.object.pk},
+                )
+            )
 
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -165,8 +184,7 @@ class ApplyToJobView(LoginRequiredMixin, View):
 
         try:
             CommissionService.apply_to_job(
-                applicant=request.user.profile,
-                job=job
+                applicant=request.user.profile, job=job
             )
         except ValueError:
             return HttpResponseForbidden("Cannot apply")

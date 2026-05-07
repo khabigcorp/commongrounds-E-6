@@ -2,13 +2,15 @@
 
 from django.db import models
 from accounts.models import Profile
+
+
 # Create your models here.
 class JobStatus(models.Model):
     name = models.CharField(max_length=20, unique=True)
     order = models.PositiveIntegerField()
 
     class Meta:
-        ordering = ['order']
+        ordering = ["order"]
         verbose_name = "Job Status"
         verbose_name_plural = "Job Statuses"
 
@@ -21,20 +23,21 @@ class ApplicationStatus(models.Model):
     order = models.PositiveIntegerField()
 
     class Meta:
-        ordering = ['order']
+        ordering = ["order"]
         verbose_name = "Application Status"
         verbose_name_plural = "Application Statuses"
 
     def __str__(self):
         return self.name
 
-    
+
 def get_default_job_status():
-    return JobStatus.objects.get(name='OPEN').id
+    return JobStatus.objects.get(name="OPEN").id
+
 
 def get_default_application_status():
-    return JobStatus.objects.get(name='PENDING').id
-    
+    return JobStatus.objects.get(name="PENDING").id
+
 
 class CommissionType(models.Model):
     """Model that represents commission type."""
@@ -44,7 +47,6 @@ class CommissionType(models.Model):
 
     def __str__(self):
         return self.name
-    
 
     class Meta:
         """Class that provides ordering of commission types."""
@@ -68,32 +70,31 @@ class Commission(models.Model):
     description = models.TextField()
     people_required = models.PositiveIntegerField()
     maker = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
+        Profile, on_delete=models.CASCADE, null=True, blank=True
     )
     status = models.ForeignKey(
         JobStatus,
         on_delete=models.PROTECT,
         null=True,
-        default=get_default_job_status
+        default=get_default_job_status,
     )
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.title
-    
+
     def refresh_status(self):
         full = JobStatus.objects.get(name="FULL")
 
-        if self.jobs.exists() and all(j.status == full for j in self.jobs.all()):
+        if self.jobs.exists() and all(
+            j.status == full for j in self.jobs.all()
+        ):
             self.status = full
         else:
             self.status = JobStatus.objects.get(name="OPEN")
 
         self.save(update_fields=["status"])
-
 
     class Meta:
         """Class that provides ordering of commissions."""
@@ -102,12 +103,10 @@ class Commission(models.Model):
         verbose_name = "Commission"
         verbose_name_plural = "Commissions"
 
-        
+
 class Job(models.Model):
     commission = models.ForeignKey(
-        Commission,
-        on_delete = models.CASCADE,
-        related_name = 'jobs'
+        Commission, on_delete=models.CASCADE, related_name="jobs"
     )
 
     role = models.CharField(max_length=255)
@@ -116,12 +115,11 @@ class Job(models.Model):
         JobStatus,
         on_delete=models.PROTECT,
         null=True,
-        default=get_default_job_status
+        default=get_default_job_status,
     )
 
     def __str__(self):
         return self.role
-    
 
     class Meta:
         ordering = ["-status", "-manpower_required", "role"]
@@ -131,30 +129,24 @@ class Job(models.Model):
 
 class JobApplication(models.Model):
     job = models.ForeignKey(
-        Job,
-        on_delete = models.CASCADE,
-        related_name = 'job_applications'
+        Job, on_delete=models.CASCADE, related_name="job_applications"
     )
     applicant = models.ForeignKey(
-        Profile,
-        on_delete = models.CASCADE,
-        related_name = 'job_applications'
+        Profile, on_delete=models.CASCADE, related_name="job_applications"
     )
     status = models.ForeignKey(
         ApplicationStatus,
-        on_delete = models.PROTECT,
-        related_name = "job_applications",
+        on_delete=models.PROTECT,
+        related_name="job_applications",
         null=True,
-        default=get_default_application_status
+        default=get_default_application_status,
     )
     applied_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.applicant.display_name + " applied to " + self.job.role
-    
 
     class Meta:
-        ordering = ['status', '-applied_on']
+        ordering = ["status", "-applied_on"]
         verbose_name = "Job Application"
         verbose_name_plural = "Job Applications"
-

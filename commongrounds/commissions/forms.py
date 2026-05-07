@@ -20,11 +20,16 @@ class JobApplicationForm(forms.ModelForm):
 class CommissionForm(forms.ModelForm):
     class Meta:
         model = Commission
-        fields = ['title', 'maker', 'commission_type', 'description', 'people_required', 'status']
+        fields = [
+            "title",
+            "maker",
+            "commission_type",
+            "description",
+            "people_required",
+            "status",
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields["maker"].disabled = True
-
-        

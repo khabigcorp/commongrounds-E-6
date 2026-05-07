@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -47,11 +48,9 @@ INSTALLED_APPS = [
     "commissions",
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://commongrounds-e-6-production.up.railway.app/'
-]
+CSRF_TRUSTED_ORIGINS = ["https://commongrounds-e-6-production.up.railway.app/"]
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -87,11 +86,7 @@ WSGI_APPLICATION = "commongrounds.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default="sqlite:///db.sqlite3"
-    )
-}
+DATABASES = {"default": dj_database_url.config(default="sqlite:///db.sqlite3")}
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -132,8 +127,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
 
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = "/"
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

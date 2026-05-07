@@ -11,6 +11,8 @@ from localevents.models import Event
 from merchstore.models import Product
 from .services import create_profile_for_user
 from .forms import RegisterForm
+
+
 # Create your views here.
 class AccountUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
@@ -21,17 +23,22 @@ class AccountUpdateView(LoginRequiredMixin, UpdateView):
         return f"/accounts/{self.object.user.username}/"
 
     def get_object(self):
-        return get_object_or_404(Profile, user__username=self.kwargs["username"])
-
+        return get_object_or_404(
+            Profile, user__username=self.kwargs["username"]
+        )
 
 
 class RegisterView(TemplateView):
     template_name = "register.html"
 
     def get(self, request):
-        return render(request, "register.html", {
-            "user_form": RegisterForm(),
-        })
+        return render(
+            request,
+            "register.html",
+            {
+                "user_form": RegisterForm(),
+            },
+        )
 
     def post(self, request):
         user_form = RegisterForm(request.POST)
@@ -43,13 +50,18 @@ class RegisterView(TemplateView):
             profile.save()
             return redirect("login")
 
-        return render(request, "register.html", {
-            "user_form": user_form,
-        })
-    
+        return render(
+            request,
+            "register.html",
+            {
+                "user_form": user_form,
+            },
+        )
+
 
 class DashboardView(TemplateView):
     template_name = "dashboard.html"
+
     def get_context_data(self, **kwargs):
         """Get context data."""
         ctx = super().get_context_data(**kwargs)
@@ -66,4 +78,3 @@ class DashboardView(TemplateView):
         ctx["created_events"] = created_events
         ctx["created_products"] = created_products
         return ctx
-        
