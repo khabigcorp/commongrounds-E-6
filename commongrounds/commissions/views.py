@@ -88,7 +88,7 @@ class CommissionCreateView(LoginRequiredMixin, RoleRequiredMixin, CreateView):
     form_class = CommissionForm
     template_name = "commissions/commission_create.html"
     success_url = "/commissions/requests/list"
-    
+    allowed_roles = ["Commission Maker"]
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
@@ -131,6 +131,7 @@ class CommissionUpdateView(LoginRequiredMixin, RoleRequiredMixin, UpdateView):
     form_class = CommissionForm
     template_name = "commissions/commission_update.html"
     success_url = "/commissions/requests/list"
+    allowed_roles = ["Commission Maker"]
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
