@@ -61,11 +61,6 @@ class ProjectCreateView(LoginRequiredMixin, RoleRequiredMixin, CreateView):
     fields = ['title', 'category', 'description', 'materials', 'steps']
     template_name = 'diyprojects/projects/project_form.html'
     allowed_roles = ["Project Creator"]
-    # def dispatch(self, request, *args, **kwargs):
-    #     if not request.user.profile.role == "Project Creator":
-    #         raise PermissionDenied
-    #     return super().dispatch(request, *args, **kwargs)
-
     def form_valid(self, form):
         form.instance.creator = self.request.user.profile
         return super().form_valid(form)
@@ -79,11 +74,6 @@ class ProjectUpdateView(LoginRequiredMixin, RoleRequiredMixin, UpdateView):
     fields = ['title', 'category', 'description', 'materials', 'steps']
     template_name = 'diyprojects/projects/project_form.html'
     allowed_roles = ["Project Creator"]
-    # def dispatch(self, request, *args, **kwargs):
-    #     project = self.get_object()
-    #     if request.user.profile.role != "Project Creator" or project.creator != request.user.profile:
-    #         raise PermissionDenied
-    #     return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return self.object.get_absolute_url()

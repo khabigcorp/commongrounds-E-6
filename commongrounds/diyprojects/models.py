@@ -5,15 +5,6 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 from accounts.models import Profile
-# class Profile(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     ROLE_CHOICES = [('Project Creator', 'Project Creator'), ('Regular User', 'Regular User')]
-#     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Regular User')
-
-#     def __str__(self):
-#         return self.user.username
-
-
 class ProjectCategory(models.Model):
     name = models.CharField(max_length=255)
     descrpition = models.TextField
@@ -80,12 +71,3 @@ class ProjectRating(models.Model):
     
     def __str__(self):
         return f"{self.score}/10 by {self.profile}"
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
