@@ -143,7 +143,7 @@ class ProductCreateView(RoleRequiredMixin, CreateView):
     allowed_roles = ["Market Seller"]
 
     def get_success_url(self):
-        return reverse_lazy("merchstore:item_list")
+        return reverse_lazy("merchstore:item_detail", kwargs={"pk": self.object.pk})
 
     def form_valid(self, form):
         product = form.save(commit=False)
