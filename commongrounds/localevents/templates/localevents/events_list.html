@@ -4,7 +4,7 @@
     <a href="{% url 'localevents:event_create' %}" >+ Create Event</a>
     <br><br>
         
-    <h2>Events Created</h2>
+    <h3>Events Created</h3>
     <ul>
         {% for event in created_events %}
         <li>
@@ -17,7 +17,7 @@
     </ul>
 
 
-    <h2>Events Signed Up For</h2>
+    <h3>Events Signed Up For</h3>
     <ul>
         {% for event in signed_up_events %}
         <li>
@@ -30,7 +30,7 @@
     </ul>
 {% endif %}
 
-<h2>All Events</h2>
+<h3>All Events</h3>
 <ul>
     {% for event in other_events %}
     <li>
