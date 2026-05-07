@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h1> Super cool homepage </h1>
+<h1> Homepage </h1>
 <p> Which app would you like to visit</p>
 <ul>
     <li><a href="{% url 'bookclub:book_list' %}">Book Club</a></li>
@@ -10,4 +10,7 @@
     <li><a href="{% url 'localevents:event_list' %}">Local Events</a></li>
     <li><a href="{% url 'merchstore:item_list'%}">Merchstore</a></li>
 </ul>
+
+<p> Other account functions </p>
+<a href="{% url 'accounts_update' request.user.username %}">Change display name</a>
 {% endblock %}
