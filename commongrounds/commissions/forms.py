@@ -32,4 +32,10 @@ class CommissionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["maker"].disabled = True
+        disabled_fields = ["maker"]
+
+        for disabled_field in disabled_fields:
+            self.fields[disabled_field].disabled = True
+        for field_name in self.fields:
+            if field_name not in disabled_fields:
+                self.fields[field_name].required = True
