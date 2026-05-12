@@ -11,7 +11,7 @@ from localevents.models import Event
 from merchstore.models import Product
 from .services import create_profile_for_user
 from .forms import RegisterForm
-
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 class AccountUpdateView(LoginRequiredMixin, UpdateView):
@@ -26,6 +26,14 @@ class AccountUpdateView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(
             Profile, user__username=self.kwargs["username"]
         )
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        if obj.user != request.user:
+            raise PermissionDenied
+
+        return super().dispatch(request, *args, **kwargs)
 
 
 class RegisterView(TemplateView):
